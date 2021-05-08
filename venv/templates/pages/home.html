@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+<div class="alert alert-success alert-dismissible fade show p-2" role="alert" id="showMsg">
+    <strong id="headerMsg"></strong><span id="bodyMsg"></span>
+    <button type="button" class="btn-close btn-sm py-3" data-bs-dismiss="alert" aria-label="Close" id="msgBtn"></button>
+</div>
+<script>
+    $('#showMsg').hide();
+</script>
+
+<!-- Forms -->
+<div class="container my-2">
+    <div class="row">
+        <!-- Create -->
+        <div class="col-md-4">
+            <div class="alert alert-info text-center" role="alert">
+                <h2>Registration form</h2>
+            </div>
+            <form method="get" id="myForm">
+                <!-- Name -->
+                <div class="mb-3">
+                    <span style="color: red;">*&nbsp;</span><label for="name" class="form-label">Name</label>
+                    <input required autofocus type="text" class="form-control" id="name" placeholder="Enter name">
+                    <div id="NameMsg" class="invalid-feedback"></div>
+                </div>
+                <!-- Email -->
+                <div class="mb-3">
+                    <span style="color: red;">*&nbsp;</span><label for="email" class="form-label">Email</label>
+                    <input required type="email" class="form-control" id="email" placeholder="name@example.com">
+                    <div id="EmailMsg" class="invalid-feedback"></div>
+                </div>
+                <!-- Phone -->
+                <div class="mb-3">
+                    <span style="color: red;">*&nbsp;</span><label for="phone" class="form-label">Phone</label>
+                    <input required type="text" class="form-control" id="phone" placeholder="Enter phone">
+                    <div id="PhoneMsg" class="invalid-feedback"></div>
+                </div>
+                <!-- Age -->
+                <div class="mb-3">
+                    <span style="color: red;">*&nbsp;</span><label for="age" class="form-label">Age</label>
+                    <input required type="text" class="form-control" id="age" placeholder="Enter age">
+                    <div id="AgeMsg" class="invalid-feedback"></div>
+                </div>
+
+                <!-- Gender -->
+                <div class="mb-3">
+                    <span style="color: red;">*&nbsp;</span><label class="form-label">Gender</label>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="male">
+                                <label class="form-check-label" for="male">
+                                    Male
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="female">
+                                <label class="form-check-label" for="female">
+                                    Female
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="others">
+                                <label class="form-check-label" for="others">
+                                    Others
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <small id="GenderMsg" style="color: #DC3545;"></small>
+                </div>
+
+                <!-- Habbits -->
+                <div class="mb-3">
+                    <span style="color: red;">*&nbsp;</span><label class="form-label">Habbits</label>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Coding" id="Coding">
+                                <label class="form-check-label" for="Coding">
+                                    Coding
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Singing" id="Singing">
+                                <label class="form-check-label" for="Singing">
+                                    Singing
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Dancing" id="Dancing">
+                                <label class="form-check-label" for="Dancing">
+                                    Dancing
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Reading" id="Reading">
+                                <label class="form-check-label" for="Reading">
+                                    Reading
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Playing" id="Playing">
+                                <label class="form-check-label" for="Playing">
+                                    Playing
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <small id="HabbitsMsg" style="color: #DC3545;"></small>
+                </div>
+
+                <div class="text-center">
+                    <input type="submit" class="btn btn-success" id="myBtn">
+                </div>
+            </form>
+        </div>
+
+        <!-- Read Update and Delete -->
+        <div class="col-md-8">
+            <div class="alert alert-danger text-center" role="alert">
+                <h2>Read Update and Delete Data</h2>
+            </div>
+            
+        </div>
+
+    </div>
+</div>
+<!-- Forms Validation -->
+<script src="{% static 'js/index.js' %}"></script>
+
+{% endblock body %}
