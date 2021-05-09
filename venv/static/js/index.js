@@ -1,6 +1,10 @@
 let nameValidate = emailValidate = phoneValidate = ageValidate = false
 document.getElementById("myBtn").disabled = true;
 
+const Removes_Validation_Class = (params) => {
+  params.classList.remove("is-valid");
+  params.classList.remove("is-invalid");
+}
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv NAme Validation Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 let Names = document.getElementById("name");
 Names.addEventListener("keyup", () => {
@@ -10,8 +14,7 @@ Names.addEventListener("keyup", () => {
   if (VALUE.length === 0) {
     Msg.innerText = "";
     nameValidate = false;
-    Names.classList.remove("is-valid");
-    Names.classList.remove("is-invalid");
+    Removes_Validation_Class(Names)
   } else if (VALUE[0].match(re) !== null) {
     VALUE = VALUE.match(re).join("");
     Names.value = VALUE;
@@ -49,8 +52,7 @@ Emails.addEventListener("keyup", () => {
   if (VALUE.length === 0) {
     Msg.innerText = "";
     emailValidate = false;
-    Emails.classList.remove("is-valid");
-    Emails.classList.remove("is-invalid");
+    Removes_Validation_Class(Emails)
   } else if (VALUE.match(re) !== null) {
     if (VALUE.length > 35) {
       Msg.innerText = "** Maximum 35 character allowed";
@@ -88,8 +90,7 @@ Phones.addEventListener("keyup", () => {
   if (VALUE.length === 0) {
     Msg.innerText = "";
     phoneValidate = false;
-    Phones.classList.remove("is-valid");
-    Phones.classList.remove("is-invalid");
+    Removes_Validation_Class(Phones)
   } else if (VALUE[0].match(re) !== null) {
     VALUE = VALUE.match(re).join("");
     Phones.value = VALUE;
@@ -114,8 +115,7 @@ Phones.addEventListener("keyup", () => {
     Phones.value = "";
     Msg.innerText = "";
     phoneValidate = false;
-    Phones.classList.remove("is-valid");
-    Phones.classList.remove("is-invalid");
+    Removes_Validation_Class(Phones)
   }
 });
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Phone Validation END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -129,14 +129,12 @@ Ages.addEventListener("keyup", () => {
   if (VALUE.length === 0) {
     Msg.innerText = "";
     ageValidate = false;
-    Ages.classList.remove("is-valid");
-    Ages.classList.remove("is-invalid");
+    Removes_Validation_Class(Ages)
   } else if (VALUE[0] == 0) {
     Ages.value = "";
     Msg.innerText = "";
     ageValidate = false;
-    Ages.classList.remove("is-valid");
-    Ages.classList.remove("is-invalid");
+    Removes_Validation_Class(Ages)
   } else if (VALUE[0].match(re) !== null) {
     VALUE = VALUE.match(re).join("");
     Ages.value = VALUE;
@@ -155,8 +153,7 @@ Ages.addEventListener("keyup", () => {
     Ages.value = "";
     Msg.innerText = "";
     ageValidate = false;
-    Ages.classList.remove("is-valid");
-    Ages.classList.remove("is-invalid");
+    Removes_Validation_Class(Ages)
   }
 });
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Age Validation END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -172,8 +169,7 @@ genderArray = [Males, Females, Others]
 const genderValidate = (genderVal, val) => {
   for (let i = 0; i < 3; i++) {
     if (genderArray[i] != genderVal) {
-      genderArray[i].classList.remove("is-invalid")
-      genderArray[i].classList.remove("is-valid")
+      Removes_Validation_Class(genderArray[i])
     }
     else {
       genderArray[i].classList.remove("is-invalid")
@@ -215,8 +211,7 @@ const checkHabbitsValidation = (habbit, val) => {
         habbitsList[i].classList.add("is-valid")
       }
       else {
-        habbitsList[i].classList.remove("is-valid")
-        habbitsList[i].classList.remove("is-invalid")
+        Removes_Validation_Class(habbitsList[i])
       }
     }
     else {
@@ -234,8 +229,7 @@ const checkHabbitsValidationElse = (habbit, val) => {
   if (index !== -1) {
     habbitsArray.splice(index, 1)
   }
-  habbit.classList.remove("is-invalid")
-  habbit.classList.remove("is-valid")
+  Removes_Validation_Class(habbit)
 }
 
 codings.addEventListener("click", () => {
@@ -298,7 +292,7 @@ for (let i = 0; i < list.length; i++) {
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Disable|Active submit button's logic END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Form Submission logic start vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-const GenderValudationFun = () => {
+const GenderValidationFun = () => {
   Males.classList.add("is-invalid");
   Males.classList.remove("is-valid");
   Females.classList.add("is-invalid");
@@ -326,10 +320,24 @@ let headerMsg = document.getElementById("headerMsg")
 let bodyMsg = document.getElementById("bodyMsg")
 let showMsg = document.getElementById("showMsg")
 
+const resetForm = () => {
+  const cl = [Names, Emails, Phones, Ages, Males, Females, Others, codings, singings, dancings, readings, playings]
+  for (let i = 0; i < cl.length; i++) {
+    Removes_Validation_Class(cl[i])
+  }
+  document.getElementById("myForm").reset()
+  Names.value = ""
+  Emails.value = ""
+  Phones.value = ""
+  Ages.value = ""
+  GenderValue = null
+  habbitsArray = []
+}
+
 document.getElementById("myForm").addEventListener("submit", (e) => {
   e.preventDefault();
   if (GenderValue == null && habbitsArray.length == 0) {
-    GenderValudationFun()
+    GenderValidationFun()
     HabbitsValidationFun()
   }
   else if (GenderValue == null) {
@@ -353,14 +361,49 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
       })
     }
     setTimeout(AsyncFunTimeOut, 5000)
-    console.log(
-      Names.value,
-      Emails.value,
-      Phones.value,
-      Ages.value,
-      GenderValue,
-      habbitsArray
-    );
+    // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    // console.log(csrftoken)
+    let resultObj = {
+      Name: Names.value,
+      Email: Emails.value,
+      Phone: Phones.value,
+      Age: Ages.value,
+      Gender: GenderValue,
+      Habbits: habbitsArray,
+    }
+    // Ajax Logic for Save Data into Database
+    const xhr = new XMLHttpRequest()
+    const url = location.href + 'student'
+    xhr.open("POST", url, true)
+    xhr.responseType = 'json'
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        let st = xhr.response.stuObj
+        let output = ""
+        for (let i = 0; i < st.length; i++) {
+          output += `<tr>
+            <th scope="row">${i + 1}</th>
+            <td>${st[i].Name}</td>
+            <td>${st[i].Email}</td>
+            <td>${st[i].Phone}</td>
+            <td>${st[i].Age}</td>
+            <td>${st[i].Gender}</td>
+            <td>${st[i].Habbits}</td>
+            <td>
+                <a class="btn btn-info btn-sm" data-sid="${st[i].id}" href="">Edit</a>&nbsp;
+                <a class="btn btn-danger btn-sm" data-sid="${st[i].id}" href="">Delete</a>
+            </td>
+          </tr>`
+        }
+        document.getElementById("tbodyId").innerHTML = output
+        resetForm()
+      }
+      else {
+        console.log("error")
+      }
+    }
+    data = JSON.stringify(resultObj)
+    xhr.send(data)
   }
 });
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Form Submission logic END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
