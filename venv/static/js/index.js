@@ -372,8 +372,8 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
       Habbits: habbitsArray,
     }
     // Ajax Logic for Save Data into Database
-    const xhr = new XMLHttpRequest()
-    const url = location.href + 'student'
+    let xhr = new XMLHttpRequest()
+    let url = location.href + 'student'
     xhr.open("POST", url, true)
     xhr.responseType = 'json'
     xhr.onload = () => {
@@ -390,8 +390,8 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
             <td>${st[i].Gender}</td>
             <td>${st[i].Habbits}</td>
             <td>
-                <a class="btn btn-info btn-sm" data-sid="${st[i].id}" href="">Edit</a>&nbsp;
-                <a class="btn btn-danger btn-sm" data-sid="${st[i].id}" href="">Delete</a>
+              <button class="btn btn-info btn-sm edtBtn" data-sid="${st[i].id}">Edit</button>
+              <button class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">Delete</button>
             </td>
           </tr>`
         }
@@ -407,3 +407,112 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
   }
 });
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Form Submission logic END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Delete Button Functionality Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+let dltBtn = document.getElementsByClassName("dltBtn")
+for (let i = 0; i < dltBtn.length; i++) {
+  dltBtn[i].addEventListener("click", () => {
+    let attr = dltBtn[i].getAttribute("data-sid");
+    // Ajax Logic for Delete Data into Database
+    let xhr = new XMLHttpRequest()
+    let url = location.href + 'delete-data'
+    xhr.open("POST", url, true)
+    xhr.responseType = 'json'
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        let st = xhr.response.stuObj
+        let output = ""
+        for (let i = 0; i < st.length; i++) {
+          output += `<tr>
+            <th scope="row">${i + 1}</th>
+            <td>${st[i].Name}</td>
+            <td>${st[i].Email}</td>
+            <td>${st[i].Phone}</td>
+            <td>${st[i].Age}</td>
+            <td>${st[i].Gender}</td>
+            <td>${st[i].Habbits}</td>
+            <td>
+              <button class="btn btn-info btn-sm edtBtn" data-sid="${st[i].id}">Edit</button>
+              <button class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">Delete</button>
+            </td>
+          </tr>`
+        }
+        document.getElementById("tbodyId").innerHTML = output
+      }
+      else {
+        console.log("error")
+      }
+    }
+    data = JSON.stringify({ 'id': attr })
+    xhr.send(data)
+  })
+}
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Delete Button Functionality End ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Edit Button Functionality Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+let edtBtn = document.getElementsByClassName("edtBtn")
+for (let i = 0; i < edtBtn.length; i++) {
+  edtBtn[i].addEventListener("click", () => {
+    let attr = edtBtn[i].getAttribute("data-sid");
+    // Ajax Logic for Delete Data into Database
+    let xhr = new XMLHttpRequest()
+    let url = location.href + 'edit-data'
+    xhr.open("POST", url, true)
+    xhr.responseType = 'json'
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        let st = xhr.response.stuObj
+        Names.value = st.Name
+        Emails.value = st.Email
+        Phones.value = st.Phone
+        Ages.value = st.Age
+        if (st.Gender == "Male") {
+          Males.checked = true
+        }
+        else if (st.Gender == "Female") {
+          Females.checked = true
+        }
+        else if (st.Gender == "Others") {
+          Others.checked = true
+        }
+        else {
+          console.log("error")
+        }
+        // ['Coding', 'Singing', 'Reading']
+      //   let arr = Array(st.Habbits)
+      //   arr.forEach((element, index) => {
+      //     console.log(index, element)
+      // });
+        // console.log(st.Habbits)
+        // console.log(st)
+      }
+      else {
+        console.log("error")
+      }
+    }
+    data = JSON.stringify({ 'id': attr })
+    xhr.send(data)
+  })
+}
+    // let output = ""
+  //       for (let i = 0; i < st.length; i++) {
+  //         output += `<tr>
+  //           <th scope="row">${i + 1}</th>
+  //           <td>${st[i].Name}</td>
+  //           <td>${st[i].Email}</td>
+  //           <td>${st[i].Phone}</td>
+  //           <td>${st[i].Age}</td>
+  //           <td>${st[i].Gender}</td>
+  //           <td>${st[i].Habbits}</td>
+  //           <td>
+  //             <button class="btn btn-info btn-sm edtBtn" data-sid="${st[i].id}">Edit</button>
+  //             <button class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">Delete</button>
+  //           </td>
+  //         </tr>`
+  //       }
+  //       document.getElementById("tbodyId").innerHTML = output
+  //     }
+  //   }
+  // })
+// }
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Edit Button Functionality End ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

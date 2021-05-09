@@ -163,14 +163,14 @@
                         <tr>
                             <th scope="row">{{forloop.counter}}</th>
                             <td>{{s.Name}}</td>
-                            <td>{{s.Eamil}}</td>
+                            <td>{{s.Email}}</td>
                             <td>{{s.Phone}}</td>
                             <td>{{s.Age}}</td>
                             <td>{{s.Gender}}</td>
                             <td>{{s.Habbits}}</td>
                             <td>
-                                <a class="btn btn-info btn-sm" href="">Edit</a>&nbsp;
-                                <a class="btn btn-danger btn-sm" href="">Delete</a>
+                            <button class="btn btn-info btn-sm edtBtn" data-sid="{{s.id}}">Edit</button>
+                            <button class="btn btn-danger btn-sm dltBtn" data-sid="{{s.id}}">Delete</button>
                             </td>
                         </tr>
                         {% endfor %}
