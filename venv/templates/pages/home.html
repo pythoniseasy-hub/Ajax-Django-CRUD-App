@@ -20,6 +20,7 @@
             </div>
             <form action="/student" method="POST" id="myForm">
                 {% csrf_token %}
+                <input type="hidden" id="stId">
                 <!-- Name -->
                 <div class="mb-3">
                     <span style="color: red;">*&nbsp;</span><label for="name" class="form-label">Name</label>
@@ -170,7 +171,9 @@
                             <td>{{s.Habbits}}</td>
                             <td>
                             <button class="btn btn-info btn-sm edtBtn" data-sid="{{s.id}}">Edit</button>
-                            <button class="btn btn-danger btn-sm dltBtn" data-sid="{{s.id}}">Delete</button>
+                            <!-- <button class="btn btn-danger btn-sm dltBtn" data-sid="{{s.id}}">Delete</button> -->
+                            <input type="button" value="Delete" class="btn btn-danger btn-sm dltBtn" data-sid="{{s.id}}">
+                            
                             </td>
                         </tr>
                         {% endfor %}

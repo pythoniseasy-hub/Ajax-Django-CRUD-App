@@ -1,5 +1,6 @@
 let nameValidate = emailValidate = phoneValidate = ageValidate = false
-document.getElementById("myBtn").disabled = true;
+let Submit_Btn = document.getElementById("myBtn")
+Submit_Btn.disabled = true;
 
 const Removes_Validation_Class = (params) => {
   params.classList.remove("is-valid");
@@ -7,10 +8,10 @@ const Removes_Validation_Class = (params) => {
 }
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv NAme Validation Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 let Names = document.getElementById("name");
-Names.addEventListener("keyup", () => {
+const nameValidationLogic = () => {
   let VALUE = String(Names.value);
-  re = /[a-zA-Z ]/gi;
   let Msg = document.getElementById("NameMsg");
+  let re = /[a-zA-Z ]/gi;
   if (VALUE.length === 0) {
     Msg.innerText = "";
     nameValidate = false;
@@ -40,12 +41,16 @@ Names.addEventListener("keyup", () => {
     Msg.innerText = "";
     nameValidate = false;
   }
+  submitButtonActivation()
+}
+Names.addEventListener("keyup", () => {
+  nameValidationLogic()
 });
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Name Validation END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Email Validation Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 let Emails = document.getElementById("email");
-Emails.addEventListener("keyup", () => {
+const emailValidationLogic = () => {
   let VALUE = Emails.value;
   let re = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/gi;
   let Msg = document.getElementById("EmailMsg");
@@ -78,12 +83,16 @@ Emails.addEventListener("keyup", () => {
     Emails.classList.remove("is-valid");
     Emails.classList.add("is-invalid");
   }
+  submitButtonActivation()
+}
+Emails.addEventListener("keyup", () => {
+  emailValidationLogic()
 });
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Email Validation END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Phone Validation Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 let Phones = document.getElementById("phone");
-Phones.addEventListener("keyup", () => {
+const phoneValidationLogic = () => {
   let VALUE = Phones.value;
   let re = /[0-9]/gi;
   let Msg = document.getElementById("PhoneMsg");
@@ -117,12 +126,16 @@ Phones.addEventListener("keyup", () => {
     phoneValidate = false;
     Removes_Validation_Class(Phones)
   }
+  submitButtonActivation()
+}
+Phones.addEventListener("keyup", () => {
+  phoneValidationLogic()
 });
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Phone Validation END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Age Validation Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 let Ages = document.getElementById("age");
-Ages.addEventListener("keyup", () => {
+const ageValidationLogic = () => {
   let VALUE = Ages.value;
   let re = /[0-9]/gi;
   let Msg = document.getElementById("AgeMsg");
@@ -155,6 +168,10 @@ Ages.addEventListener("keyup", () => {
     ageValidate = false;
     Removes_Validation_Class(Ages)
   }
+  submitButtonActivation()
+}
+Ages.addEventListener("keyup", () => {
+  ageValidationLogic()
 });
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Age Validation END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -178,6 +195,7 @@ const genderValidate = (genderVal, val) => {
   }
   GenderValue = val;
   GenderMsg.innerText = "";
+  submitButtonActivation()
 }
 
 Males.addEventListener("click", () => {
@@ -222,6 +240,7 @@ const checkHabbitsValidation = (habbit, val) => {
   habbitsArray.push(val)
   HabbitsMsg.innerText = ""
   habbitsArray = [...new Set(habbitsArray)]
+  submitButtonActivation()
 }
 
 const checkHabbitsValidationElse = (habbit, val) => {
@@ -230,6 +249,7 @@ const checkHabbitsValidationElse = (habbit, val) => {
     habbitsArray.splice(index, 1)
   }
   Removes_Validation_Class(habbit)
+  submitButtonActivation()
 }
 
 codings.addEventListener("click", () => {
@@ -279,15 +299,17 @@ playings.addEventListener("click", () => {
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Habbits Validation END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvv Disable|Active submit button's logic start vvvvvvvvvvvvvvvvvvvvvvvvvv
-list = [Names, Emails, Phones, Ages];
-for (let i = 0; i < list.length; i++) {
-  list[i].addEventListener("keyup", () => {
-    if (nameValidate && emailValidate && phoneValidate && ageValidate) {
-      document.getElementById("myBtn").disabled = false;
+const submitButtonActivation = () => {
+  if (habbitsArray.length !== 0) {
+    if (nameValidate && emailValidate && phoneValidate && ageValidate && GenderValue) {
+      Submit_Btn.disabled = false;
     } else {
-      document.getElementById("myBtn").disabled = true;
+      Submit_Btn.disabled = true;
     }
-  });
+  }
+  else {
+    Submit_Btn.disabled = true;
+  }
 }
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Disable|Active submit button's logic END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -364,12 +386,13 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
     // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     // console.log(csrftoken)
     let resultObj = {
+      stId: document.getElementById("stId").value,
       Name: Names.value,
       Email: Emails.value,
       Phone: Phones.value,
       Age: Ages.value,
       Gender: GenderValue,
-      Habbits: habbitsArray,
+      Habbits: habbitsArray
     }
     // Ajax Logic for Save Data into Database
     let xhr = new XMLHttpRequest()
@@ -391,12 +414,13 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
             <td>${st[i].Habbits}</td>
             <td>
               <button class="btn btn-info btn-sm edtBtn" data-sid="${st[i].id}">Edit</button>
-              <button class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">Delete</button>
+              <input type="button" value="Delete" class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">
             </td>
           </tr>`
         }
         document.getElementById("tbodyId").innerHTML = output
         resetForm()
+        // <button class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">Delete</button>
       }
       else {
         console.log("error")
@@ -412,6 +436,7 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
 let dltBtn = document.getElementsByClassName("dltBtn")
 for (let i = 0; i < dltBtn.length; i++) {
   dltBtn[i].addEventListener("click", () => {
+    resetForm()
     let attr = dltBtn[i].getAttribute("data-sid");
     // Ajax Logic for Delete Data into Database
     let xhr = new XMLHttpRequest()
@@ -433,7 +458,7 @@ for (let i = 0; i < dltBtn.length; i++) {
             <td>${st[i].Habbits}</td>
             <td>
               <button class="btn btn-info btn-sm edtBtn" data-sid="${st[i].id}">Edit</button>
-              <button class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">Delete</button>
+              <input type="button" value="Delete" class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">
             </td>
           </tr>`
         }
@@ -453,6 +478,7 @@ for (let i = 0; i < dltBtn.length; i++) {
 let edtBtn = document.getElementsByClassName("edtBtn")
 for (let i = 0; i < edtBtn.length; i++) {
   edtBtn[i].addEventListener("click", () => {
+    resetForm()
     let attr = edtBtn[i].getAttribute("data-sid");
     // Ajax Logic for Delete Data into Database
     let xhr = new XMLHttpRequest()
@@ -462,29 +488,55 @@ for (let i = 0; i < edtBtn.length; i++) {
     xhr.onload = () => {
       if (xhr.status === 200) {
         let st = xhr.response.stuObj
+        document.getElementById("stId").value = st.id
         Names.value = st.Name
         Emails.value = st.Email
         Phones.value = st.Phone
         Ages.value = st.Age
-        if (st.Gender == "Male") {
+        GenderValue = st.Gender
+        let hab = st.Habbits
+        let Habbit_regex = /(\w+)/g;
+        habbitsArray = hab.match(Habbit_regex);
+
+        if (GenderValue == "Male") {
+          genderValidate(Males, "Male")
           Males.checked = true
         }
-        else if (st.Gender == "Female") {
+        else if (GenderValue == "Female") {
+          genderValidate(Females, "Female")
           Females.checked = true
         }
-        else if (st.Gender == "Others") {
+        else if (GenderValue == "Others") {
+          genderValidate(Others, "Others")
           Others.checked = true
         }
         else {
           console.log("error")
         }
-        // ['Coding', 'Singing', 'Reading']
-      //   let arr = Array(st.Habbits)
-      //   arr.forEach((element, index) => {
-      //     console.log(index, element)
-      // });
-        // console.log(st.Habbits)
-        // console.log(st)
+        for (let h = 0; h < habbitsArray.length; h++) {
+          if (habbitsArray[h] == "Coding") {
+            codings.checked = true
+          }
+          else if (habbitsArray[h] == "Singing") {
+            singings.checked = true
+          }
+          else if (habbitsArray[h] == "Dancing") {
+            dancings.checked = true
+          }
+          else if (habbitsArray[h] == "Reading") {
+            readings.checked = true
+          }
+          else if (habbitsArray[h] == "Playing") {
+            playings.checked = true
+          }
+          else {
+            console.log("error")
+          }
+        }
+        nameValidationLogic()
+        emailValidationLogic()
+        phoneValidationLogic()
+        ageValidationLogic()
       }
       else {
         console.log("error")
@@ -494,25 +546,4 @@ for (let i = 0; i < edtBtn.length; i++) {
     xhr.send(data)
   })
 }
-    // let output = ""
-  //       for (let i = 0; i < st.length; i++) {
-  //         output += `<tr>
-  //           <th scope="row">${i + 1}</th>
-  //           <td>${st[i].Name}</td>
-  //           <td>${st[i].Email}</td>
-  //           <td>${st[i].Phone}</td>
-  //           <td>${st[i].Age}</td>
-  //           <td>${st[i].Gender}</td>
-  //           <td>${st[i].Habbits}</td>
-  //           <td>
-  //             <button class="btn btn-info btn-sm edtBtn" data-sid="${st[i].id}">Edit</button>
-  //             <button class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">Delete</button>
-  //           </td>
-  //         </tr>`
-  //       }
-  //       document.getElementById("tbodyId").innerHTML = output
-  //     }
-  //   }
-  // })
-// }
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Edit Button Functionality End ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

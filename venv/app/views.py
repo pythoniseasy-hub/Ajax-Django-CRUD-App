@@ -15,8 +15,12 @@ def student(request):
     if request.method == 'POST':
         result = request.body
         result = json.loads(result)
-        Student(Name=result['Name'], Email=result['Email'], Phone=result['Phone'],
-                Age=result['Age'], Gender=result['Gender'], Habbits=result['Habbits']).save()
+        if result['stId']:
+            Student.objects.filter(id=result['stId']).update(Name=result['Name'], Email=result['Email'],
+                                                             Phone=result['Phone'], Age=result['Age'], Gender=result['Gender'], Habbits=result['Habbits'])
+        else:
+            Student(Name=result['Name'], Email=result['Email'], Phone=result['Phone'],
+                    Age=result['Age'], Gender=result['Gender'], Habbits=result['Habbits']).save()
         stuObj = Student.objects.values()
         stuObj = list(stuObj)
         return JsonResponse({'stuObj': stuObj})
@@ -47,7 +51,7 @@ def editData(request):
         stu = Student.objects.get(id=result['id'])
         stuObj = {"id": stu.id, "Name": stu.Name, "Email": stu.Email, "Phone": stu.Phone,
                   "Age": stu.Age, "Gender": stu.Gender, "Habbits": stu.Habbits}
-        return JsonResponse({'stuObj': stuObj})    
+        return JsonResponse({'stuObj': stuObj})
     else:
         print("error")
     return redirect('/')
