@@ -1,12 +1,13 @@
-let nameValidate = emailValidate = phoneValidate = ageValidate = false
+"use strict"
+let nameValidate, emailValidate, phoneValidate, ageValidate
+nameValidate = emailValidate = phoneValidate = ageValidate = false
 let Submit_Btn = document.getElementById("myBtn")
 Submit_Btn.disabled = true;
-
 const Removes_Validation_Class = (params) => {
   params.classList.remove("is-valid");
   params.classList.remove("is-invalid");
 }
-//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv NAme Validation Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Name Validation Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 let Names = document.getElementById("name");
 const nameValidationLogic = () => {
   let VALUE = String(Names.value);
@@ -182,7 +183,7 @@ let Others = document.getElementById("others");
 let GenderMsg = document.getElementById("GenderMsg");
 let GenderValue = null;
 
-genderArray = [Males, Females, Others]
+let genderArray = [Males, Females, Others]
 const genderValidate = (genderVal, val) => {
   for (let i = 0; i < 3; i++) {
     if (genderArray[i] != genderVal) {
@@ -221,7 +222,7 @@ let HabbitsMsg = document.getElementById("HabbitsMsg")
 
 let habbitsArray = []
 
-habbitsList = [codings, singings, dancings, readings, playings]
+let habbitsList = [codings, singings, dancings, readings, playings]
 const checkHabbitsValidation = (habbit, val) => {
   for (let i = 0; i < 5; i++) {
     if (habbitsList[i] !== habbit) {
@@ -312,7 +313,15 @@ const submitButtonActivation = () => {
   }
 }
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Disable|Active submit button's logic END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
+const elementSet = (st) => {
+  let output = ""
+  let el
+  let len = st.length
+  for (el = 0; el < len; el++) {
+    output += `<tr><th scope="row">${el + 1}</th><td>${st[el].Name}</td><td>${st[el].Email}</td><td>${st[el].Phone}</td><td>${st[el].Age}</td><td>${st[el].Gender}</td><td>${st[el].Habbits}</td><td><input type="button" value="Edit" class="btn btn-info btn-sm edtBtn" data-sid="${st[el].id}" > <input type="button" value="Delete" class="btn btn-danger btn-sm dltBtn" data-sid="${st[el].id}" ></td></tr>`
+  }
+  document.getElementById("tbodyId").innerHTML = output
+}
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Form Submission logic start vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 const GenderValidationFun = () => {
   Males.classList.add("is-invalid");
@@ -376,7 +385,7 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
       $('#showMsg').slideDown();
     })
 
-    AsyncFunTimeOut = () => {
+    const AsyncFunTimeOut = () => {
       jQuery.noConflict();
       jQuery(document).ready(($) => {
         $('#showMsg').slideUp();
@@ -402,31 +411,14 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
     xhr.onload = () => {
       if (xhr.status === 200) {
         let st = xhr.response.stuObj
-        let output = ""
-        for (let i = 0; i < st.length; i++) {
-          output += `<tr>
-            <th scope="row">${i + 1}</th>
-            <td>${st[i].Name}</td>
-            <td>${st[i].Email}</td>
-            <td>${st[i].Phone}</td>
-            <td>${st[i].Age}</td>
-            <td>${st[i].Gender}</td>
-            <td>${st[i].Habbits}</td>
-            <td>
-              <button class="btn btn-info btn-sm edtBtn" data-sid="${st[i].id}">Edit</button>
-              <input type="button" value="Delete" class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">
-            </td>
-          </tr>`
-        }
-        document.getElementById("tbodyId").innerHTML = output
+        elementSet(st)
         resetForm()
-        // <button class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">Delete</button>
       }
       else {
         console.log("error")
       }
     }
-    data = JSON.stringify(resultObj)
+    let data = JSON.stringify(resultObj)
     xhr.send(data)
   }
 });
@@ -436,42 +428,28 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
 let dltBtn = document.getElementsByClassName("dltBtn")
 for (let i = 0; i < dltBtn.length; i++) {
   dltBtn[i].addEventListener("click", () => {
-    resetForm()
     let attr = dltBtn[i].getAttribute("data-sid");
+    console.log(attr)
+    console.log("Delete btn clicked");
     // Ajax Logic for Delete Data into Database
     let xhr = new XMLHttpRequest()
     let url = location.href + 'delete-data'
     xhr.open("POST", url, true)
     xhr.responseType = 'json'
     xhr.onload = () => {
-      if (xhr.status === 200) {
+      if (xhr.status == 200) {
         let st = xhr.response.stuObj
-        let output = ""
-        for (let i = 0; i < st.length; i++) {
-          output += `<tr>
-            <th scope="row">${i + 1}</th>
-            <td>${st[i].Name}</td>
-            <td>${st[i].Email}</td>
-            <td>${st[i].Phone}</td>
-            <td>${st[i].Age}</td>
-            <td>${st[i].Gender}</td>
-            <td>${st[i].Habbits}</td>
-            <td>
-              <button class="btn btn-info btn-sm edtBtn" data-sid="${st[i].id}">Edit</button>
-              <input type="button" value="Delete" class="btn btn-danger btn-sm dltBtn" data-sid="${st[i].id}">
-            </td>
-          </tr>`
-        }
-        document.getElementById("tbodyId").innerHTML = output
+        elementSet(st)
+        resetForm()
       }
       else {
         console.log("error")
       }
     }
-    data = JSON.stringify({ 'id': attr })
+    let data = JSON.stringify({ 'id': attr })
     xhr.send(data)
-  })
-}
+  });
+};
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Delete Button Functionality End ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Edit Button Functionality Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -542,7 +520,7 @@ for (let i = 0; i < edtBtn.length; i++) {
         console.log("error")
       }
     }
-    data = JSON.stringify({ 'id': attr })
+    let data = JSON.stringify({ 'id': attr })
     xhr.send(data)
   })
 }
