@@ -547,3 +547,15 @@ for (let i = 0; i < edtBtn.length; i++) {
   })
 }
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Edit Button Functionality End ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Search Functionality Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+jQuery.noConflict();
+jQuery(document).ready(($) => {
+  $("#searchBtn").on("keyup", function () {
+    let value = $(this).val().toLowerCase();
+    $("#tbodyId tr").filter(function () {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+})
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Search Functionality End ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

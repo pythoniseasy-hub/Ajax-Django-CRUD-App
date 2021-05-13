@@ -145,6 +145,7 @@
             <div class="alert alert-danger text-center" role="alert">
                 <h2>Read Update and Delete Data</h2>
             </div>
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchBtn">
             <div class="table-responsive">
                 <table class="table text-center">
                     <thead>
@@ -170,10 +171,11 @@
                             <td>{{s.Gender}}</td>
                             <td>{{s.Habbits}}</td>
                             <td>
-                            <button class="btn btn-info btn-sm edtBtn" data-sid="{{s.id}}">Edit</button>
-                            <!-- <button class="btn btn-danger btn-sm dltBtn" data-sid="{{s.id}}">Delete</button> -->
-                            <input type="button" value="Delete" class="btn btn-danger btn-sm dltBtn" data-sid="{{s.id}}">
-                            
+                                <button class="btn btn-info btn-sm edtBtn" data-sid="{{s.id}}">Edit</button>
+                                <!-- <button class="btn btn-danger btn-sm dltBtn" data-sid="{{s.id}}">Delete</button> -->
+                                <input type="button" value="Delete" class="btn btn-danger btn-sm dltBtn"
+                                    data-sid="{{s.id}}">
+
                             </td>
                         </tr>
                         {% endfor %}
