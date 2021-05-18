@@ -1,4 +1,4 @@
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from .models import *
@@ -9,8 +9,6 @@ def home(request):
     st = Student.objects.all()
     return render(request, 'pages/home.html', {'st': st})
 
-
-@csrf_exempt
 def student(request):
     if request.method == 'POST':
         result = request.body
@@ -26,10 +24,10 @@ def student(request):
         return JsonResponse({'stuObj': stuObj})
     else:
         print("error")
-    return redirect('/')
+        return redirect('/')
 
 
-@csrf_exempt
+# @csrf_exempt
 def deleteData(request):
     if request.method == 'POST':
         result = request.body
@@ -40,10 +38,10 @@ def deleteData(request):
         return JsonResponse({'stuObj': stuObj})
     else:
         print("error")
-    return redirect('/')
+        return redirect('/')
 
 
-@csrf_exempt
+# @csrf_exempt
 def editData(request):
     if request.method == 'POST':
         result = request.body
@@ -54,4 +52,4 @@ def editData(request):
         return JsonResponse({'stuObj': stuObj})
     else:
         print("error")
-    return redirect('/')
+        return redirect('/')

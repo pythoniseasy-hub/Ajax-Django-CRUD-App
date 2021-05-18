@@ -313,14 +313,23 @@ const submitButtonActivation = () => {
   }
 }
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Disable|Active submit button's logic END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+const callApi = async (url, params) => {
+  let response = await fetch(url, params)
+  let data = response.json()
+  return data
+}
+
+
+let tbodyId = document.getElementById("tbodyId")
 const elementSet = (st) => {
   let output = ""
   let el
   let len = st.length
   for (el = 0; el < len; el++) {
-    output += `<tr><th scope="row">${el + 1}</th><td>${st[el].Name}</td><td>${st[el].Email}</td><td>${st[el].Phone}</td><td>${st[el].Age}</td><td>${st[el].Gender}</td><td>${st[el].Habbits}</td><td><input type="button" value="Edit" class="btn btn-info btn-sm edtBtn" data-sid="${st[el].id}" > <input type="button" value="Delete" class="btn btn-danger btn-sm dltBtn" data-sid="${st[el].id}" ></td></tr>`
+    // console.log(st[el].id, typeof st[el].id);
+    output += `<tr><th scope="row">${el + 1}</th><td>${st[el].Name}</td><td>${st[el].Email}</td><td>${st[el].Phone}</td><td>${st[el].Age}</td><td>${st[el].Gender}</td><td>${st[el].Habbits}</td><td><input type="button" value="Edit" class="btn btn-info btn-sm edtBtn m-2" data-sid="${String(st[el].id)}" > <input type="submit" value="Delete" class="btn btn-danger btn-sm dltBtn" data-sid="${String(st[el].id)}" ></td></tr>`
   }
-  document.getElementById("tbodyId").innerHTML = output
+  tbodyId.innerHTML = output
 }
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Form Submission logic start vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 const GenderValidationFun = () => {
@@ -392,8 +401,6 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
       })
     }
     setTimeout(AsyncFunTimeOut, 5000)
-    // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    // console.log(csrftoken)
     let resultObj = {
       stId: document.getElementById("stId").value,
       Name: Names.value,
@@ -404,24 +411,25 @@ document.getElementById("myForm").addEventListener("submit", (e) => {
       Habbits: habbitsArray
     }
     // Ajax Logic for Save Data into Database
-    let xhr = new XMLHttpRequest()
     let url = location.href + 'student'
-    xhr.open("POST", url, true)
-    xhr.responseType = 'json'
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        let st = xhr.response.stuObj
-        elementSet(st)
-        resetForm()
-      }
-      else {
-        console.log("error")
-      }
+    let csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let params = {
+      method: "post",
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        "X-CSRFToken": csrftoken
+      },
+      body: JSON.stringify(resultObj)
     }
-    let data = JSON.stringify(resultObj)
-    xhr.send(data)
+    let data = callApi(url, params)
+    data.then((data) => {
+      // console.log(data.stuObj)
+      elementSet(data.stuObj)
+      resetForm()
+    })
   }
-});
+})
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Form Submission logic END ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Delete Button Functionality Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -429,27 +437,27 @@ let dltBtn = document.getElementsByClassName("dltBtn")
 for (let i = 0; i < dltBtn.length; i++) {
   dltBtn[i].addEventListener("click", () => {
     let attr = dltBtn[i].getAttribute("data-sid");
-    console.log(attr)
-    console.log("Delete btn clicked");
-    // Ajax Logic for Delete Data into Database
-    let xhr = new XMLHttpRequest()
     let url = location.href + 'delete-data'
-    xhr.open("POST", url, true)
-    xhr.responseType = 'json'
-    xhr.onload = () => {
-      if (xhr.status == 200) {
-        let st = xhr.response.stuObj
-        elementSet(st)
-        resetForm()
-      }
-      else {
-        console.log("error")
-      }
+    let csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let dataObj = { "id": attr }
+    // Ajax Logic for Delete Data into Database
+    let params = {
+      method: "post",
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        "X-CSRFToken": csrftoken
+      },
+      body: JSON.stringify(dataObj)
     }
-    let data = JSON.stringify({ 'id': attr })
-    xhr.send(data)
-  });
-};
+    let data = callApi(url, params)
+    data.then((data) => {
+      // console.log(data.stuObj)
+      elementSet(data.stuObj)
+      resetForm()
+    })
+  })
+}
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Delete Button Functionality End ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv Edit Button Functionality Start vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -458,70 +466,72 @@ for (let i = 0; i < edtBtn.length; i++) {
   edtBtn[i].addEventListener("click", () => {
     resetForm()
     let attr = edtBtn[i].getAttribute("data-sid");
-    // Ajax Logic for Delete Data into Database
-    let xhr = new XMLHttpRequest()
     let url = location.href + 'edit-data'
-    xhr.open("POST", url, true)
-    xhr.responseType = 'json'
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        let st = xhr.response.stuObj
-        document.getElementById("stId").value = st.id
-        Names.value = st.Name
-        Emails.value = st.Email
-        Phones.value = st.Phone
-        Ages.value = st.Age
-        GenderValue = st.Gender
-        let hab = st.Habbits
-        let Habbit_regex = /(\w+)/g;
-        habbitsArray = hab.match(Habbit_regex);
+    let csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let dataObj = { "id": attr }
+    let params = {
+      method: "post",
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        "X-CSRFToken": csrftoken
+      },
+      body: JSON.stringify(dataObj)
+    }
+    let data = callApi(url, params)
+    data.then((data) => {
+      // console.log(data.stuObj)
+      let st = data.stuObj
+      document.getElementById("stId").value = st.id
+      Names.value = st.Name
+      Emails.value = st.Email
+      Phones.value = st.Phone
+      Ages.value = st.Age
+      GenderValue = st.Gender
+      let hab = st.Habbits
+      let Habbit_regex = /(\w+)/g;
+      habbitsArray = hab.match(Habbit_regex);
 
-        if (GenderValue == "Male") {
-          genderValidate(Males, "Male")
-          Males.checked = true
-        }
-        else if (GenderValue == "Female") {
-          genderValidate(Females, "Female")
-          Females.checked = true
-        }
-        else if (GenderValue == "Others") {
-          genderValidate(Others, "Others")
-          Others.checked = true
-        }
-        else {
-          console.log("error")
-        }
-        for (let h = 0; h < habbitsArray.length; h++) {
-          if (habbitsArray[h] == "Coding") {
-            codings.checked = true
-          }
-          else if (habbitsArray[h] == "Singing") {
-            singings.checked = true
-          }
-          else if (habbitsArray[h] == "Dancing") {
-            dancings.checked = true
-          }
-          else if (habbitsArray[h] == "Reading") {
-            readings.checked = true
-          }
-          else if (habbitsArray[h] == "Playing") {
-            playings.checked = true
-          }
-          else {
-            console.log("error")
-          }
-        }
-        nameValidationLogic()
-        emailValidationLogic()
-        phoneValidationLogic()
-        ageValidationLogic()
+      if (GenderValue == "Male") {
+        genderValidate(Males, "Male")
+        Males.checked = true
+      }
+      else if (GenderValue == "Female") {
+        genderValidate(Females, "Female")
+        Females.checked = true
+      }
+      else if (GenderValue == "Others") {
+        genderValidate(Others, "Others")
+        Others.checked = true
       }
       else {
         console.log("error")
       }
-    }
-    let data = JSON.stringify({ 'id': attr })
-    xhr.send(data)
+      for (let h = 0; h < habbitsArray.length; h++) {
+        if (habbitsArray[h] == "Coding") {
+          codings.checked = true
+        }
+        else if (habbitsArray[h] == "Singing") {
+          singings.checked = true
+        }
+        else if (habbitsArray[h] == "Dancing") {
+          dancings.checked = true
+        }
+        else if (habbitsArray[h] == "Reading") {
+          readings.checked = true
+        }
+        else if (habbitsArray[h] == "Playing") {
+          playings.checked = true
+        }
+        else {
+          console.log("error")
+        }
+      }
+      nameValidationLogic()
+      emailValidationLogic()
+      phoneValidationLogic()
+      ageValidationLogic()
+    })
   })
 }
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Edit Button Functionality End ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

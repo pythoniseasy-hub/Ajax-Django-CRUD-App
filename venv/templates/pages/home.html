@@ -11,7 +11,7 @@
 </script>
 
 <!-- Forms -->
-<div class="container my-2">
+<div class="container my-2" id="mainDiv">
     <div class="row">
         <!-- Create -->
         <div class="col-md-4" id="myDiv">
@@ -171,10 +171,10 @@
                             <td>{{s.Gender}}</td>
                             <td>{{s.Habbits}}</td>
                             <td>
-                                <input type="button" value="Edit" class="btn btn-info btn-sm edtBtn"
-                                    data-sid="{{s.id}}" />
-                                <input type="button" value="Delete" class="btn btn-danger btn-sm dltBtn"
-                                    data-sid="{{s.id}}" />
+                                <input type="button" value="Edit" class="btn btn-info btn-sm edtBtn m-2"
+                                    data-sid="{{s.id}}" >
+                                <input type="submit" value="Delete" class="btn btn-danger btn-sm dltBtn"
+                                    data-sid="{{s.id}}" >
                             </td>
                         </tr>
                         {% endfor %}
